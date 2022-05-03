@@ -1,79 +1,113 @@
 <!DOCTYPE html>
-<html lang="en" dir="ltr">
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>Stripe Checkout Sample</title>
+    <meta name="description" content="A demo of Stripe client-only Checkout" />
 
-<head>
-  <meta charset="utf-8">
-  <title>Pay Nuo Netflix</title>
-  <link rel="shortcut icon" href="https://assets.nflxext.com/ffe/siteui/common/icons/nficon2016.ico" type="image/x-icon" />
-  <link rel="stylesheet" href="index.css">
-</head>
+    <link rel="icon" href="favicon.ico" type="image/x-icon" />
+    <link rel="stylesheet" href="css/normalize.css" />
+    <link rel="stylesheet" href="css/global.css" />
+    <!-- Load Stripe.js on your website. -->
+    <script src="https://js.stripe.com/v3/"></script>
+  </head>
 
-<body>
-  <h1>Tan Nuo</h1>
-  <img src="images/profile.jpg" width="10%" height="10%" , alt="Tan Nuo">
-  <p>Hello there, I am a <strong><em>computer science</em></strong> student</p>
-  <p>I am currently doing my fyp</p>
+  <body>
+    <div class="sr-root">
+      <div class="sr-main" style="display: flex;">
+        <header class="sr-header">
+          <div class="sr-header__logo"></div>
+        </header>
+        <div class="sr-container">
+          <section class="container">
+            <h1>One-time Donation</h1>
+            <button
+              data-checkout-mode="payment"
+              data-price-id="sku_GU4JYXyvvRb2sX"
+            >
+              Donate $5.00 once
+            </button>
+            <button
+              data-checkout-mode="payment"
+              data-price-id="sku_GU4KO8nfdg8G2Z"
+            >
+              Donate $15.00 once
+            </button>
+            <button
+              data-checkout-mode="payment"
+              data-price-id="sku_GU4LB0wBViiYsm"
+            >
+              Donate $50.00 once
+            </button>
+          </section>
+          <section class="container">
+            <h1>Recurring Donation</h1>
+            <button
+              data-checkout-mode="subscription"
+              data-price-id="plan_GU4MXg0k0Uv1S6"
+            >
+              Donate $20.00 per month
+            </button>
+          </section>
+        </div>
+        <div id="error-message"></div>
+      </div>
+    </div>
+    <div class="banner">
+      <span>
+        This is a
+        <a href="https://github.com/stripe-samples"> Stripe Sample </a> on how
+        to use Stripe Checkout on GitHub Pages.
+        <a
+          href="https://github.com/stripe-samples/github-pages-stripe-checkout"
+        >
+          View code on GitHub.
+        </a>
+      </span>
+    </div>
 
-  <hr>
+    <script>
+      // Replace with your own publishable key: https://dashboard.stripe.com/test/apikeys
+      var PUBLISHABLE_KEY = 'pk_test_Tr8olTkdFnnJVywwhNPHwnHK00HkHV4tnP';
+      // Replace with the domain you want your users to be redirected back to after payment
+      var DOMAIN = location.href.replace(/[^/]*$/, '');
 
-  <h3>Education</h3>
+      if (PUBLISHABLE_KEY === 'pk_test_Tr8olTkdFnnJVywwhNPHwnHK00HkHV4tnP') {
+        console.log(
+          'Replace the hardcoded publishable key with your own publishable key: https://dashboard.stripe.com/test/apikeys'
+        );
+      }
 
-  <ul>
-    <li><a href="https://www.facebook.com/PIBK-SJKC-Li-Hwa-%E5%8A%B1%E5%8D%8E%E5%AD%A6%E6%A0%A1%E5%AE%B6%E9%95%BF%E4%B8%8E%E7%A4%BE%E5%8C%BA%E5%9B%A2-237765966336876/" target="_blank">Primary school</a></li>
-    <li><a href="https://en.wikipedia.org/wiki/Chung_Ling_Butterworth_High_School" target="_blank">Secondary school</a></li>
-    <li><a href="https://www.uowmkdu.edu.my/">UOW Malaysia KDU</a></li>
-  </ul>
-  <hr>
-  <h3><a href="hobbies.html">Hobbies</a></h3>
-  <hr>
-  <h3>Experience</h3>
-  <table>
-    <thead>
-      <th>Dates</th>
-      <th>Work</th>
-    </thead>
-    <tbody>
+      var stripe = Stripe(PUBLISHABLE_KEY);
 
-    </tbody>
-    <tfoot>
+      // Handle any errors from Checkout
+      var handleResult = function (result) {
+        if (result.error) {
+          var displayError = document.getElementById('error-message');
+          displayError.textContent = result.error.message;
+        }
+      };
 
-    </tfoot>
-    <tr>
-      <td>2020-2021</td>
-      <td>Web Developer at Apple</td>
-    </tr>
-    <tr>
-      <td>2022</td>
-      <td>Software Engineer in Google inc</td>
-    </tr>
-  </table>
+      document.querySelectorAll('button').forEach(function (button) {
+        button.addEventListener('click', function (e) {
+          var mode = e.target.dataset.checkoutMode;
+          var priceId = e.target.dataset.priceId;
+          var items = [{ price: priceId, quantity: 1 }];
 
-  <hr>
-
-  <h3>Skills</h3>
-  <table style="border: 0px">
-    <tr>
-      <td style="border: 0px">C++</td>
-      <td style="border: 0px">⭐⭐⭐⭐⭐</td>
-      <td style="border: 0px">Java</td>
-      <td style="border: 0px">⭐⭐⭐⭐</td>
-    </tr>
-    <tr>
-      <td style="border: 0px">Python</td>
-      <td style="border: 0px">⭐⭐⭐⭐⭐</td>
-      <td style="border: 0px">HTML</td>
-      <td style="border: 0px">⭐⭐⭐⭐⭐</td>
-    </tr>
-
-  </table>
-
-  <h3><a href="contact-me.html">Contatct me</a></h3>
-
-  <hr>
-
-  <h3><a href="html_inputs.html">HTML Inputs</a></h3>
-
-  <h3><a href="html_challenge.html">HTML Challenge</a></h3>
-</body>
-
+          // Make the call to Stripe.js to redirect to the checkout page
+          // with the sku or plan ID.
+          stripe
+            .redirectToCheckout({
+              mode: mode,
+              lineItems: items,
+              successUrl:
+                DOMAIN + 'success.html?session_id={CHECKOUT_SESSION_ID}',
+              cancelUrl:
+                DOMAIN + 'canceled.html?session_id={CHECKOUT_SESSION_ID}',
+            })
+            .then(handleResult);
+        });
+      });
+    </script>
+  </body>
 </html>
